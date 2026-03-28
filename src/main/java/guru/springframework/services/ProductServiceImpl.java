@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by jt on 1/10/17.
@@ -16,15 +17,14 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
-    private ProductFormToProduct productFormToProduct;
+    private final ProductRepository productRepository;
+    private final ProductFormToProduct productFormToProduct;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository, ProductFormToProduct productFormToProduct) {
         this.productRepository = productRepository;
         this.productFormToProduct = productFormToProduct;
     }
-
 
     @Override
     public List<Product> listAll() {
@@ -35,7 +35,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getById(Long id) {
-        return productRepository.findOne(id);
+        Optional<Product> productOptional = productRepository.findById(id);
+        return productOptional.orElse(null);
     }
 
     @Override
@@ -46,8 +47,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long id) {
-        productRepository.delete(id);
-
+        productRepository.deleteById(id);
     }
 
     @Override
